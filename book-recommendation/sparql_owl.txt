@@ -1,0 +1,78 @@
+Query 1: List all books with their titles and authors
+
+PREFIX ex: <http://example.org/book-recommendation#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?book ?title ?author
+WHERE {
+  ?book rdf:type ex:Book .
+
+  OPTIONAL { ?book ex:hasTitle ?title . }
+  OPTIONAL { ?book ex:hasAuthor ?author . }
+}
+
+
+Query 2: List users, preferred themes and reading levels
+
+PREFIX ex: <http://example.org/book-recommendation#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?user ?preferredTheme ?readingLevel
+WHERE {
+  ?user rdf:type ex:User .
+  ?user ex:prefersTheme ?preferredTheme .
+  ?user ex:hasReadingLevel ?readingLevel .
+}
+
+
+Query 3: Find books that have the Science Fiction theme
+
+PREFIX ex: <http://example.org/book-recommendation#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?book ?title
+WHERE {
+  ?book rdf:type ex:Book .
+  ?book ex:hasTheme ex:ScienceFiction .
+
+  OPTIONAL { ?book ex:hasTitle ?title . }
+}
+
+
+
+Query 4: Find books suitable for Beginner readers
+
+PREFIX ex: <http://example.org/book-recommendation#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?book ?title
+WHERE {
+  ?book rdf:type ex:Book .
+  ?book ex:suitableForReadingLevel ex:Beginner .
+
+  OPTIONAL { ?book ex:hasTitle ?title . }
+}
+
+
+
+Query 5: Recommend books to users based on theme and reading level
+
+PREFIX ex: <http://example.org/book-recommendation#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?user ?book ?title ?theme ?readingLevel
+WHERE {
+  ?user rdf:type ex:User .
+  ?user ex:prefersTheme ?theme .
+  ?user ex:hasReadingLevel ?readingLevel .
+
+  ?book rdf:type ex:Book .
+  ?book ex:hasTheme ?theme .
+  ?book ex:suitableForReadingLevel ?readingLevel .
+
+  OPTIONAL { ?book ex:hasTitle ?title . }
+}
+
+
+
+
