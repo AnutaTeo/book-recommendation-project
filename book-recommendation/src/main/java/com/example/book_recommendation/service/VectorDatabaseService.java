@@ -46,6 +46,22 @@ public class VectorDatabaseService {
                         text,
                         embedding
                 ));
+
+                List<String> userTexts = createUserTexts();
+
+                for (String userText : userTexts) {
+                    String userId = userText.contains("Alice") ? "Alice" : "Bob";
+
+                    System.out.println("Generating embedding for user: " + userId);
+
+                    List<Double> userEmbedding = embeddingService.generateEmbedding(userText);
+
+                    documents.add(new VectorDocument(
+                            userId,
+                            userText,
+                            embedding
+                    ));
+                }
             }
 
             Path path = Path.of(VECTOR_DB_FILE);
@@ -94,6 +110,10 @@ public class VectorDatabaseService {
         }
     }
 
+    public List<VectorDocument> getAllDocuments() {
+        return loadDocuments();
+    }
+
     private String createBookText(Book book) {
         String author = book.getAuthor();
 
@@ -119,6 +139,26 @@ public class VectorDatabaseService {
                 String.join(", ", book.getThemes())
         );
     }
+
+    private List<String> createUserTexts() {
+        return List.of(
+                """
+                User ID: Alice
+                Name: Alice
+                Preferred theme: Science Fiction
+                Reading level: Intermediate
+                Recommendation rule: Recommend books that match Alice's preferred theme and reading level.
+                """,
+                """
+                User ID: Bob
+                Name: Bob
+                Preferred theme: Mystery
+                Reading level: Beginner
+                Recommendation rule: Recommend books that match Bob's preferred theme and reading level.
+                """
+        );
+    }
+
     private double cosineSimilarity(List<Double> a, List<Double> b) {
         double dot = 0.0;
         double normA = 0.0;
