@@ -3,6 +3,7 @@ body {
     background: #f3f4f6;
     margin: 0;
     padding: 0;
+    color: #1f2937;
 }
 
 .container {
@@ -15,7 +16,11 @@ body {
 }
 
 h1 {
-    color: #2c3e50;
+    color: #1e3a5f;
+}
+
+h2 {
+    color: #334155;
 }
 
 button {
@@ -31,15 +36,35 @@ button:hover {
     background: #3730a3;
 }
 
-input[type="file"] {
-    margin-right: 12px;
+input, select {
+    padding: 8px;
+    width: 300px;
+    max-width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
 }
 
 a {
     color: #4f46e5;
     text-decoration: none;
+    font-weight: bold;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.book-card {
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    border-radius: 14px;
+    background: #f9fafb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }

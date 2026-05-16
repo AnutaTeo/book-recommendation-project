@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${book.title}">Book Details</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 th:text="${book.title}">Book Title</h1>
+
+    <p>
+        <strong>RDF Resource ID:</strong>
+        <span th:text="${book.id}">BookId</span>
+    </p>
+
+    <p>
+        <strong>Author:</strong>
+        <span th:text="${book.author}">Author</span>
+    </p>
+
+    <p>
+        <strong>Suitable Reading Level:</strong>
+        <span th:text="${book.readingLevel}">Reading Level</span>
+    </p>
+
+    <p>
+        <strong>Themes:</strong>
+        <span th:each="theme, iterStat : ${book.themes}">
+            <span th:text="${theme}">Theme</span><span th:if="${!iterStat.last}">, </span>
+        </span>
+    </p>
+
+    <hr>
+
+    <p>
+        This page displays information queried from the RDF graph using Apache Jena.
+    </p>
+
+    <a href="/books">Back to Books</a>
+</div>
+
+</body>
+</html>

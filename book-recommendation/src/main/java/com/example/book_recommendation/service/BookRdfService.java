@@ -1,10 +1,14 @@
 package com.example.book_recommendation.service;
+import com.example.book_recommendation.model.Book;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
+import org.apache.jena.query.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BookRdfService {
@@ -89,4 +93,143 @@ public class BookRdfService {
     private String createBookId(String title) {
         return title.replaceAll("[^a-zA-Z0-9]", "");
     }
+
+
+    public List<Book> getAllBooks() {
+        Model model = loadModel();
+
+        String queryString = """
+            PREFIX ex: <http://example.org/book-recommendation#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+            SELECT ?book ?title ?author ?readingLevel
+            WHERE {
+                ?book rdf:type ex:Book .
+                OPTIONAL { ?book ex:title ?title . }
+                OPTIONAL { ?book ex:author ?author . }
+                OPTIONAL { ?book ex:suitableForReadingLevel ?readingLevel . }
+            }
+            """;
+
+        List<Book> books = new ArrayList<>();
+
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
+            ResultSet results = queryExecution.execSelect();
+
+            while (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+
+                String bookUri = solution.getResource("book").getURI();
+                String id = extractId(bookUri);
+
+                String title = solution.contains("title")
+                        ? solution.getLiteral("title").getString()
+                        : id;
+
+                String author = solution.contains("author")
+                        ? solution.getLiteral("author").getString()
+                        : "Unknown";
+
+                String readingLevel = solution.contains("readingLevel")
+                        ? solution.getLiteral("readingLevel").getString()
+                        : "Not specified";
+
+                Book book = new Book();
+                book.setId(id);
+                book.setTitle(title);
+                book.setAuthor(author);
+                book.setReadingLevel(readingLevel);
+                book.setThemes(getThemesForBook(model, bookUri));
+
+                books.add(book);
+            }
+        }
+
+        return books;
+    }
+
+    public Book getBookById(String bookId) {
+        Model model = loadModel();
+
+        String bookUri = BASE_URI + bookId;
+
+        String queryString = """
+            PREFIX ex: <http://example.org/book-recommendation#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+            SELECT ?title ?author ?readingLevel
+            WHERE {
+                <%s> rdf:type ex:Book .
+                OPTIONAL { <%s> ex:title ?title . }
+                OPTIONAL { <%s> ex:author ?author . }
+                OPTIONAL { <%s> ex:suitableForReadingLevel ?readingLevel . }
+            }
+            """.formatted(bookUri, bookUri, bookUri, bookUri);
+
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
+            ResultSet results = queryExecution.execSelect();
+
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+
+                Book book = new Book();
+                book.setId(bookId);
+
+                book.setTitle(solution.contains("title")
+                        ? solution.getLiteral("title").getString()
+                        : bookId);
+
+                book.setAuthor(solution.contains("author")
+                        ? solution.getLiteral("author").getString()
+                        : "Unknown");
+
+                book.setReadingLevel(solution.contains("readingLevel")
+                        ? solution.getLiteral("readingLevel").getString()
+                        : "Not specified");
+
+                book.setThemes(getThemesForBook(model, bookUri));
+
+                return book;
+            }
+        }
+
+        return null;
+    }
+
+    private List<String> getThemesForBook(Model model, String bookUri) {
+        String queryString = """
+            PREFIX ex: <http://example.org/book-recommendation#>
+
+            SELECT ?theme
+            WHERE {
+                <%s> ex:hasTheme ?theme .
+            }
+            """.formatted(bookUri);
+
+        List<String> themes = new ArrayList<>();
+
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
+            ResultSet results = queryExecution.execSelect();
+
+            while (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                themes.add(solution.get("theme").toString());
+            }
+        }
+
+        return themes;
+    }
+
+    private String extractId(String uri) {
+        if (uri.contains("#")) {
+            return uri.substring(uri.lastIndexOf("#") + 1);
+        }
+
+        return uri.substring(uri.lastIndexOf("/") + 1);
+    }
+
+
+
+
+
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Available Books</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Available Books</h1>
+
+    <p>
+        The following books are loaded from the RDF/XML file using Apache Jena and SPARQL.
+    </p>
+
+    <div class="book-grid">
+        <div class="book-card" th:each="book : ${books}">
+            <h2 th:text="${book.title}">Book title</h2>
+
+            <p>
+                <strong>Author:</strong>
+                <span th:text="${book.author}">Unknown</span>
+            </p>
+
+            <p>
+                <strong>Reading Level:</strong>
+                <span th:text="${book.readingLevel}">Beginner</span>
+            </p>
+
+            <p>
+                <strong>Themes:</strong>
+                <span th:each="theme, iterStat : ${book.themes}">
+                    <span th:text="${theme}">Theme</span><span th:if="${!iterStat.last}">, </span>
+                </span>
+            </p>
+
+            <a th:href="@{'/books/' + ${book.id}}">View Details</a>
+        </div>
+    </div>
+
+    <br>
+
+    <a href="/">Back to Home</a>
+</div>
+
+</body>
+</html>
