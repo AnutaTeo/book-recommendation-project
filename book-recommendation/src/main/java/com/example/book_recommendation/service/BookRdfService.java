@@ -106,7 +106,11 @@ public class BookRdfService {
             WHERE {
                 ?book rdf:type ex:Book .
                 OPTIONAL { ?book ex:title ?title . }
-                OPTIONAL { ?book ex:author ?author . }
+                OPTIONAL {
+                        { ?book ex:author ?author . }
+                        UNION
+                        { ?book ex:hasAuthor ?author . }
+                    }
                 OPTIONAL { ?book ex:suitableForReadingLevel ?readingLevel . }
             }
             """;
@@ -128,7 +132,8 @@ public class BookRdfService {
 
                 String author = solution.contains("author")
                         ? solution.getLiteral("author").getString()
-                        : "Unknown";
+                        : getAuthorForBook(model, bookUri);
+                System.out.println("LIST BOOK DEBUG: " + title + " author = " + author);
 
                 String readingLevel = solution.contains("readingLevel")
                         ? solution.getLiteral("readingLevel").getString()
@@ -148,6 +153,27 @@ public class BookRdfService {
         return books;
     }
 
+    private String getAuthorForBook(Model model, String bookUri) {
+        Resource book = model.getResource(bookUri);
+
+        Property authorProperty = model.createProperty(BASE_URI, "author");
+        Property hasAuthorProperty = model.createProperty(BASE_URI, "hasAuthor");
+
+        Statement authorStatement = book.getProperty(authorProperty);
+
+        if (authorStatement != null) {
+            return authorStatement.getObject().toString();
+        }
+
+        Statement hasAuthorStatement = book.getProperty(hasAuthorProperty);
+
+        if (hasAuthorStatement != null) {
+            return hasAuthorStatement.getObject().toString();
+        }
+
+        return "Unknown";
+    }
+
     public Book getBookById(String bookId) {
         Model model = loadModel();
 
@@ -161,7 +187,11 @@ public class BookRdfService {
             WHERE {
                 <%s> rdf:type ex:Book .
                 OPTIONAL { <%s> ex:title ?title . }
-                OPTIONAL { <%s> ex:author ?author . }
+                OPTIONAL {
+                        { ?book ex:author ?author . }
+                        UNION
+                        { ?book ex:hasAuthor ?author . }
+                    }
                 OPTIONAL { <%s> ex:suitableForReadingLevel ?readingLevel . }
             }
             """.formatted(bookUri, bookUri, bookUri, bookUri);

@@ -5,23 +5,29 @@
     <ex:hasReadingLevel>Intermediate</ex:hasReadingLevel>
     <ex:prefersTheme>Science Fiction</ex:prefersTheme>
   </ex:User>
+
   <ex:Book rdf:about="http://example.org/book-recommendation#HungerGames">
     <ex:suitableForReadingLevel>Intermediate</ex:suitableForReadingLevel>
     <ex:hasTheme>Science Fiction</ex:hasTheme>
     <ex:hasTheme>Fantasy</ex:hasTheme>
     <ex:title>Hunger Games</ex:title>
+    <ex:author>Suzanne Collins</ex:author>
   </ex:Book>
+
   <ex:Book rdf:about="http://example.org/book-recommendation#Dune">
     <ex:title>Dune</ex:title>
+    <ex:author>Frank Herbert</ex:author>
     <ex:hasTheme>Science Fiction</ex:hasTheme>
     <ex:hasTheme>Fantasy</ex:hasTheme>
     <ex:suitableForReadingLevel>Advanced</ex:suitableForReadingLevel>
   </ex:Book>
+
   <ex:RecommendationRule rdf:about="http://example.org/book-recommendation#RecommendedBookRule">
     <ex:description>
             A book is recommended for a user if it belongs to the user's preferred theme and matches the user's reading level.
         </ex:description>
   </ex:RecommendationRule>
+
   <ex:Book rdf:about="http://example.org/book-recommendation#HarryPotter">
     <ex:title>Harry Potter</ex:title>
     <ex:author>J. K. Rowling</ex:author>
@@ -29,12 +35,15 @@
     <ex:hasTheme>Magic</ex:hasTheme>
     <ex:suitableForReadingLevel>Intermediate</ex:suitableForReadingLevel>
   </ex:Book>
+
   <ex:User rdf:about="http://example.org/book-recommendation#Bob">
     <ex:hasReadingLevel>Beginner</ex:hasReadingLevel>
     <ex:prefersTheme>Mystery</ex:prefersTheme>
   </ex:User>
+
   <ex:Book rdf:about="http://example.org/book-recommendation#TheSilentPatient">
     <ex:title>The Silent Patient</ex:title>
+    <ex:author>Alex Michaelides</ex:author>
     <ex:hasTheme>Mystery</ex:hasTheme>
     <ex:hasTheme>Murder</ex:hasTheme>
     <ex:suitableForReadingLevel>Intermediate</ex:suitableForReadingLevel>
