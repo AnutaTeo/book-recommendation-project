@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RDF Graph Visualization</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style>
+        #rdfGraph {
+            width: 100%;
+            height: 650px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>RDF Graph Visualization</h1>
+
+    <p>
+        This graph was generated from the RDF/XML file you uploaded.
+    </p>
+
+    <div id="rdfGraph"></div>
+
+    <br>
+
+    <a href="/upload">Upload another RDF file</a>
+</div>
+
+<script th:inline="javascript">
+    const nodes = /*[[${nodes}]]*/ [];
+    const edges = /*[[${edges}]]*/ [];
+
+    const container = document.getElementById("rdfGraph");
+
+    const data = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges)
+    };
+
+    const options = {
+        nodes: {
+            shape: "box",
+            margin: 10,
+            font: {
+                size: 16
+            }
+        },
+        edges: {
+            arrows: "to",
+            font: {
+                align: "middle",
+                size: 13
+            }
+        },
+        physics: {
+            enabled: true,
+            stabilization: true
+        }
+    };
+
+    new vis.Network(container, data, options);
+</script>
+
+</body>
+</html>

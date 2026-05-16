@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload RDF/XML</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Upload RDF/XML File</h1>
+
+    <p>
+        Upload the RDF/XML file created in Exercise 1 to visualize its RDF graph.
+    </p>
+
+    <form method="post" action="/upload-rdf" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".rdf,.xml" required>
+        <button type="submit">Upload and Visualize</button>
+    </form>
+
+    <br>
+
+    <a href="/">Back to Home</a>
+</div>
+
+</body>
+</html>
