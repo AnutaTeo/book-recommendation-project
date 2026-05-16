@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Hunger Games</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Edit Hunger Games Reading Level</h1>
+
+  <p th:if="${param.success}" style="color: green;">
+    Hunger Games reading level was updated successfully in the RDF file.
+  </p>
+
+  <form method="post" action="/books/edit-hunger-games">
+
+    <label>New Reading Level:</label><br>
+
+    <select name="readingLevel" required>
+      <option value="Beginner">Beginner</option>
+      <option value="Intermediate" selected>Intermediate</option>
+      <option value="Advanced">Advanced</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Update Hunger Games</button>
+  </form>
+
+  <br>
+
+  <a href="/">Back to Home</a>
+</div>
+
+</body>
+</html>
