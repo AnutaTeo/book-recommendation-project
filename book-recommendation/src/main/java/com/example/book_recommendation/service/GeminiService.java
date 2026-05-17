@@ -10,7 +10,7 @@ import java.io.IOException;
 @Service
 public class GeminiService {
 
-    private static final String API_KEY = "AIzaSyBD3cNJF8mj2Nk87QxAOJ2UPWcaCS7bR38";
+    private static final String API_KEY = "YOUR_API_KEY";
 
     private static final String URL =
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
